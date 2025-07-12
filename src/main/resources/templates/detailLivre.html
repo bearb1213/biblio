@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du Livre</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .book-cover {
+            max-height: 400px;
+            object-fit: contain;
+        }
+        .action-btn {
+            min-width: 120px;
+            margin: 5px;
+        }
+        .genre-badge {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Colonne de gauche - Couverture du livre -->
+            <div class="col-md-4 text-center">
+                <img th:src="${livre.imageUrl != null} ? ${livre.imageUrl} : '/images/default-book-cover.jpg'" 
+                     alt="Couverture du livre" class="img-fluid book-cover mb-3">
+                
+                <div class="d-grid gap-2">
+                    <!-- Bouton Prêter (visible si exemplaires disponibles) -->
+                    <button th:if="${exemplairesDisponibles > 0}" 
+                            class="btn btn-primary btn-lg action-btn"
+                            data-bs-toggle="modal" data-bs-target="#pretModal">
+                        <i class="bi bi-book"></i> Prêter
+                    </button>
+                    
+                    <!-- Bouton Réserver -->
+                    <button class="btn btn-success btn-lg action-btn"
+                            data-bs-toggle="modal" data-bs-target="#reservationModal">
+                        <i class="bi bi-bookmark-plus"></i> Réserver
+                    </button>
+                    
+                    <!-- Message si aucun exemplaire disponible -->
+                    <div th:if="${exemplairesDisponibles == 0}" class="alert alert-warning">
+                        Aucun exemplaire disponible actuellement
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Colonne de droite - Détails du livre -->
+            <div class="col-md-8">
+                <h1 th:text="${livre.titre}">Titre du livre</h1>
+                <h4 class="text-muted" th:text="${livre.auteur.nom + ' ' + livre.auteur.prenom}">Auteur</h4>
+                
+                <hr>
+                
+                <div class="mb-3">
+                    <span class="badge bg-info" th:text="${livre.langue}">Langue</span>
+                    <span class="badge bg-secondary ms-2" th:text="${livre.nbPage + ' pages'}">Pages</span>
+                    <span th:if="${livre.restriction != null}" class="badge bg-warning ms-2" 
+                          th:text="'Restriction: +' + ${livre.restriction}">Restriction</span>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Genres :</strong>
+                    <div>
+                        <span th:each="genre : ${livre.genres}" 
+                              class="badge bg-primary genre-badge" 
+                              th:text="${genre.genre}">Genre</span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Date de publication :</strong>
+                    <span th:text="${#temporals.format(livre.datePremierEdition, 'dd MMMM yyyy')}">01 janvier 2023</span>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Exemplaires disponibles :</strong>
+                    <span th:text="${exemplairesDisponibles}">0</span> /
+                    <span th:text="${totalExemplaires}">0</span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Synopsis</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text" th:text="${livre.synopsis} ?: 'Aucun synopsis disponible'">
+                            Synopsis du livre...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal pour le prêt -->
+    <div class="modal fade" id="pretModal" tabindex="-1" aria-labelledby="pretModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pretModalLabel">Prêter ce livre</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/prets/nouveau}" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="livreId" th:value="${livre.id}">
+                        
+                        <div class="mb-3">
+                            <label for="utilisateurId" class="form-label">Utilisateur</label>
+                            <select class="form-select" id="utilisateurId" name="utilisateurId" required>
+                                <option value="">Sélectionner un utilisateur</option>
+                                <option th:each="utilisateur : ${utilisateurs}" 
+                                        th:value="${utilisateur.id}"
+                                        th:text="${utilisateur.nom + ' ' + utilisateur.prenom}">
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="exemplaireId" class="form-label">Exemplaire</label>
+                            <select class="form-select" id="exemplaireId" name="exemplaireId" required>
+                                <option value="">Sélectionner un exemplaire</option>
+                                <option th:each="exemplaire : ${exemplairesDisponos}"
+                                        th:value="${exemplaire.id}"
+                                        th:text="'Exemplaire #' + ${exemplaire.id}">
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="dateRetourPrevue" class="form-label">Date de retour prévue</label>
+                            <input type="date" class="form-control" id="dateRetourPrevue" 
+                                   name="dateRetourPrevue" th:value="${dateRetourDefault}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Confirmer le prêt</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal pour la réservation -->
+    <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reservationModalLabel">Réserver ce livre</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/reservations/nouvelle}" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="livreId" th:value="${livre.id}">
+                        
+                        <div class="mb-3">
+                            <label for="reservUtilisateurId" class="form-label">Utilisateur</label>
+                            <select class="form-select" id="reservUtilisateurId" name="utilisateurId" required>
+                                <option value="">Sélectionner un utilisateur</option>
+                                <option th:each="utilisateur : ${utilisateurs}" 
+                                        th:value="${utilisateur.id}"
+                                        th:text="${utilisateur.nom + ' ' + utilisateur.prenom}">
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="motif" class="form-label">Motif (optionnel)</label>
+                            <textarea class="form-control" id="motif" name="motif" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-success">Confirmer la réservation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
