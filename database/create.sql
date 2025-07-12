@@ -10,13 +10,13 @@ CREATE TABLE adhesion_type(
 );
 
 CREATE TABLE utilisateur_type(
-   id VARCHAR(50),
+   id SERIAL,
    type VARCHAR(50),
    PRIMARY KEY(id)
 );
 
 CREATE TABLE auteur(
-   id VARCHAR(50),
+   id SERIAL,
    nom VARCHAR(255),
    PRIMARY KEY(id)
 );
@@ -35,7 +35,7 @@ CREATE TABLE livre(
    langue VARCHAR(50),
    nb_page INTEGER,
    restriction INTEGER,
-   id_auteur VARCHAR(50) NOT NULL,
+   id_auteur INTEGER NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_auteur) REFERENCES auteur(id)
 );
@@ -57,6 +57,23 @@ CREATE TABLE exemplaire(
    FOREIGN KEY(id_livre) REFERENCES livre(id)
 );
 
+CREATE TABLE quotas(
+   id SERIAL,
+   action VARCHAR(50),
+   nb INTEGER,
+   id_type INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_type) REFERENCES adhesion_type(id)
+);
+
+CREATE TABLE penalite_type(
+   id SERIAL,
+   nb_jour INTEGER,
+   id_type INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_type) REFERENCES adhesion_type(id)
+);
+
 CREATE TABLE utilisateur(
    id SERIAL,
    nom VARCHAR(255),
@@ -65,7 +82,7 @@ CREATE TABLE utilisateur(
    mdp VARCHAR(255),
    date_naissance DATE,
    date_in DATE,
-   id_type VARCHAR(50) NOT NULL,
+   id_type INTEGER NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_type) REFERENCES utilisateur_type(id)
 );
@@ -121,12 +138,20 @@ CREATE TABLE pret_status(
    FOREIGN KEY(id_pret) REFERENCES pret(id)
 );
 
-
-CREATE TABLE prolongement( 
+CREATE TABLE prolongement(
    id SERIAL,
    statu VARCHAR(50),
    date_in TIMESTAMP,
    id_pret INTEGER NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_pret) REFERENCES pret(id)
+);
+
+CREATE TABLE penalite(
+   id SERIAL,
+   date_in TIMESTAMP,
+   date_fin TIMESTAMP,
+   id_utilisateur INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id)
 );
