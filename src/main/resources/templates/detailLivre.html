@@ -26,12 +26,10 @@
         <div class="row">
             <!-- Colonne de gauche - Couverture du livre -->
             <div class="col-md-4 text-center">
-                <img th:src="${livre.imageUrl != null} ? ${livre.imageUrl} : '/images/default-book-cover.jpg'" 
-                     alt="Couverture du livre" class="img-fluid book-cover mb-3">
                 
                 <div class="d-grid gap-2">
                     <!-- Bouton Prêter (visible si exemplaires disponibles) -->
-                    <button th:if="${exemplairesDisponibles > 0}" 
+                    <button 
                             class="btn btn-primary btn-lg action-btn"
                             data-bs-toggle="modal" data-bs-target="#pretModal">
                         <i class="bi bi-book"></i> Prêter
@@ -43,17 +41,13 @@
                         <i class="bi bi-bookmark-plus"></i> Réserver
                     </button>
                     
-                    <!-- Message si aucun exemplaire disponible -->
-                    <div th:if="${exemplairesDisponibles == 0}" class="alert alert-warning">
-                        Aucun exemplaire disponible actuellement
-                    </div>
                 </div>
             </div>
             
             <!-- Colonne de droite - Détails du livre -->
             <div class="col-md-8">
                 <h1 th:text="${livre.titre}">Titre du livre</h1>
-                <h4 class="text-muted" th:text="${livre.auteur.nom + ' ' + livre.auteur.prenom}">Auteur</h4>
+                <h4 class="text-muted" th:text="${livre.auteur.nom}">Auteur</h4>
                 
                 <hr>
                 
@@ -76,12 +70,6 @@
                 <div class="mb-3">
                     <strong>Date de publication :</strong>
                     <span th:text="${#temporals.format(livre.datePremierEdition, 'dd MMMM yyyy')}">01 janvier 2023</span>
-                </div>
-                
-                <div class="mb-3">
-                    <strong>Exemplaires disponibles :</strong>
-                    <span th:text="${exemplairesDisponibles}">0</span> /
-                    <span th:text="${totalExemplaires}">0</span>
                 </div>
                 
                 <div class="card">
@@ -133,9 +121,9 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="dateRetourPrevue" class="form-label">Date de retour prévue</label>
-                            <input type="date" class="form-control" id="dateRetourPrevue" 
-                                   name="dateRetourPrevue" th:value="${dateRetourDefault}">
+                            <label for="datePret" class="form-label">Date de Pret</label>
+                            <input type="date" class="form-control" id="datePret" 
+                                   name="datePret" >
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -86,6 +86,12 @@ CREATE TABLE utilisateur(
    PRIMARY KEY(id),
    FOREIGN KEY(id_type) REFERENCES utilisateur_type(id)
 );
+INSERT INTO utilisateur_type (type) VALUES 
+('Bibliothecaire'),
+('User');
+
+INSERT INTO utilisateur (nom,prenom,email,mdp,date_naissance,date_in,id_type) VALUES
+('biblio' , 'biblio' , 'biblio@gmail.com' , 'biblio' , '2000-01-01' , now() , 1 );
 
 CREATE TABLE adhesion(
    id SERIAL,

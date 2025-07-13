@@ -45,3 +45,5 @@ INSERT INTO exemplaire (date_in, id_livre) VALUES
 ('2022-02-18', 5),
 ('2022-06-30', 6),
 ('2022-06-30', 6);
+
+
