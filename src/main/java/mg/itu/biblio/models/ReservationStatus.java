@@ -23,9 +23,8 @@ public class ReservationStatus {
     @Column(name = "statu", length = 50, nullable = false)
     private String status; // "EN_ATTENTE", "CONFIRMEE", "ANNULEE", etc.
 
-    @CreationTimestamp
     @Column(name = "date_in", nullable = false, updatable = false)
-    private LocalDateTime dateStatus;
+    private LocalDateTime dateIn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_reservation", nullable = false)

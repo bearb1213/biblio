@@ -91,6 +91,8 @@ public class AuthentificationController {
             model.addAttribute("error", "Identifiants invalides. Veuillez réessayer.");
         } else if(error != null && error.equals("connection_need")) {
             model.addAttribute("error", "Vous devez vous connecter pour accéder à cette page.");
+        } else if(error != null && error.equals("access_denied")) {
+            model.addAttribute("error", "Vous n'avez pas assez de privilege pour acceder a cette page.");
         } else {
             model.addAttribute("error", null);
         }

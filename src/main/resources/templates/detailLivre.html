@@ -23,6 +23,14 @@
 </head>
 <body>
     <div class="container mt-4">
+        <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${success != null}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div class="row">
             <!-- Colonne de gauche - Couverture du livre -->
             <div class="col-md-4 text-center">
@@ -143,19 +151,25 @@
                     <h5 class="modal-title" id="reservationModalLabel">Réserver ce livre</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form th:action="@{/reservations/nouvelle}" method="post">
+                <form th:action="@{/reservation/new}" method="post">
                     <div class="modal-body">
                         <input type="hidden" name="livreId" th:value="${livre.id}">
                         
                         <div class="mb-3">
-                            <label for="reservUtilisateurId" class="form-label">Utilisateur</label>
-                            <select class="form-select" id="reservUtilisateurId" name="utilisateurId" required>
-                                <option value="">Sélectionner un utilisateur</option>
-                                <option th:each="utilisateur : ${utilisateurs}" 
-                                        th:value="${utilisateur.id}"
-                                        th:text="${utilisateur.nom + ' ' + utilisateur.prenom}">
+                            <label for="exemplaireId" class="form-label">Exemplaire</label>
+                            <select class="form-select" id="exemplaireId" name="exemplaireId" required>
+                                <option value="">Sélectionner un exemplaire</option>
+                                <option th:each="exemplaire : ${exemplairesDisponos}"
+                                        th:value="${exemplaire.id}"
+                                        th:text="'Exemplaire #' + ${exemplaire.id}">
                                 </option>
                             </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="dateReservation" class="form-label">Date de réservation</label>
+                            <input type="date" class="form-control" id="dateReservation" 
+                                   name="dateReservation" required>
                         </div>
                         
                         <div class="mb-3">

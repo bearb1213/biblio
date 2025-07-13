@@ -1,5 +1,6 @@
 package mg.itu.biblio.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,17 @@ public class UtilisateurService {
         return adhesionRepository.findFirstByUtilisateurOrderByDateInDesc(utilisateur).orElse(null);
     }   
 
+    public Adhesion isAdherant(Utilisateur utilisateur){
+        Adhesion adhesion = getLastAdhesionByUtilisateur(utilisateur);
+        if (adhesion==null) {
+            return null;
+        } 
+        if (adhesion.getDateFin().isBefore(LocalDate.now())) {
+            return null;
+        } 
+        return adhesion;
+        
+    }
 
 
 }

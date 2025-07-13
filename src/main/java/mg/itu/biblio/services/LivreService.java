@@ -28,6 +28,9 @@ public class LivreService {
     public Livre getLivreById(Integer id) {
         return livreRepository.findById(id).orElse(null);
     }
+    public Exemplaire getExemplaireById(Integer id) {
+        return exemplaireRepository.findById(id).orElse(null);
+    }
     public List<Exemplaire> findExemplaireByLivreId(Integer id) throws Exception{
         Livre livre = livreRepository.findById(id).orElse(null);
         if (livre != null) {
