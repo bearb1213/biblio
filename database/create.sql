@@ -9,11 +9,22 @@ CREATE TABLE adhesion_type(
    PRIMARY KEY(id)
 );
 
+INSERT INTO adhesion_type (type) VALUES 
+('Etudiant'),
+('Professeur'),
+('Professionnel');
+
+
 CREATE TABLE utilisateur_type(
    id SERIAL,
    type VARCHAR(50),
    PRIMARY KEY(id)
 );
+
+INSERT INTO utilisateur_type (type) VALUES 
+('Bibliothecaire'),
+('User');
+
 
 CREATE TABLE auteur(
    id SERIAL,
@@ -86,10 +97,6 @@ CREATE TABLE utilisateur(
    PRIMARY KEY(id),
    FOREIGN KEY(id_type) REFERENCES utilisateur_type(id)
 );
-INSERT INTO utilisateur_type (type) VALUES 
-('Bibliothecaire'),
-('User');
-
 INSERT INTO utilisateur (nom,prenom,email,mdp,date_naissance,date_in,id_type) VALUES
 ('biblio' , 'biblio' , 'biblio@gmail.com' , 'biblio' , '2000-01-01' , now() , 1 );
 

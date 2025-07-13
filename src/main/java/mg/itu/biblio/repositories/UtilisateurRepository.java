@@ -14,7 +14,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
     // Méthodes de base fournies automatiquement
     
     // Méthodes personnalisées utiles
-    Utilisateur findByEmail(String email);
+    Optional<Utilisateur> findByEmail(String email);
     List<Utilisateur> findByTypeUtilisateurId(Integer typeId);
     List<Utilisateur> findByNomContainingOrPrenomContaining(String nom, String prenom);
     Optional<Utilisateur> findByEmailAndMotDePasse(String email, String motDePasse);
