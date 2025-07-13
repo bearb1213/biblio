@@ -1,6 +1,8 @@
 package mg.itu.biblio.repositories;
 
 import mg.itu.biblio.models.Utilisateur;
+import mg.itu.biblio.models.UtilisateurType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +15,10 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
     
     // Méthodes personnalisées utiles
     Utilisateur findByEmail(String email);
-    List<Utilisateur> findByTypeUtilisateurId(String typeId);
+    List<Utilisateur> findByTypeUtilisateurId(Integer typeId);
     List<Utilisateur> findByNomContainingOrPrenomContaining(String nom, String prenom);
     Optional<Utilisateur> findByEmailAndMotDePasse(String email, String motDePasse);
 
+    List<Utilisateur> findByTypeUtilisateur(UtilisateurType type);
 
 }
