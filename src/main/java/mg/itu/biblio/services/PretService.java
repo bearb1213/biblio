@@ -52,6 +52,9 @@ public class PretService {
     public Integer getPretQuota(Integer typeAdhesionId){
         return quotaRepository.findNombreMaxByTypeAndAction(typeAdhesionId, "pret").orElse(0);
     }
+    public Integer getProlongementQuota(Integer typeAdhesionId){
+        return quotaRepository.findNombreMaxByTypeAndAction(typeAdhesionId, "prolongement").orElse(0);
+    }
 
     public Integer getNbPret(Utilisateur utilisateur){
         return getNbProlongement(utilisateur) + pretRepository.countByUtilisateurAndStatut(utilisateur, "EN_COURS"); 
@@ -143,6 +146,13 @@ public class PretService {
         return true;
 
     }
+    public List<Pret> listPretEnCours(Utilisateur utilisateur){
+         return pretRepository.findByStatutAndUtilisateur("EN_COURS", utilisateur);
+    }
+    public List<Pret> listPretProlonger(Utilisateur utilisateur){
+        return pretRepository.findByStatutAndUtilisateur("PROLONGE", utilisateur);
+   }
+   
 
 
 }

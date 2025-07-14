@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Demandes de prolongement</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .badge-demande { background-color: #FFC107; color: black; }
+        .badge-accepte { background-color: #28A745; color: white; }
+        .badge-refuse { background-color: #DC3545; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Demandes de prolongement</h1>
+        
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Date demande</th>
+                    <th>Utilisateur</th>
+                    <th>Livre</th>
+                    <th>Date retour prévue</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="demande : ${prolongement}">
+                    <td th:text="${#temporals.format(demande.dateDemande, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td>
+                        <span th:text="${demande.pret.utilisateur.nom + ' ' + demande.pret.utilisateur.prenom}"></span><br>
+                        <small th:text="${demande.pret.utilisateur.email}" class="text-muted"></small>
+                    </td>
+                    <td th:text="${demande.pret.exemplaire.livre.titre}"></td>
+                    <td th:text="${#temporals.format(demande.pret.dateRetourPrevue, 'dd/MM/yyyy')}"></td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        <div th:if="${demande.statut == 'DEMANDE'}">
+                            <a th:href="@{/prolongement/accepter/{id}(id=${demande.id})}" 
+                               class="btn btn-sm btn-success me-2">Accepter</a>
+                            <a th:href="@{/prolongement/refuser/{id}(id=${demande.id})}" 
+                               class="btn btn-sm btn-danger">Refuser</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

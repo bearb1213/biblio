@@ -45,7 +45,7 @@ public class PretController {
         @RequestParam("datePret") String datePret,
         HttpSession session
     ) {
-        
+        /// test user
         Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
         if (utilisateur == null) {
             return "redirect:/sign/in?error=connection_need";
@@ -56,6 +56,8 @@ public class PretController {
         } else if( utilisateurType.getId() != 1) {
             return "redirect:/sign/in?error=access_denied";
         } 
+
+        /// test livre
         Livre livre = livreService.getLivreById(livreId);
         if(livre == null){
             return "redirect:/?error=livre_not_found";
@@ -64,6 +66,7 @@ public class PretController {
         if(exemplaire == null){
             return "redirect:/?error=exemplaire_not_found";
         }
+
         Utilisateur user = utilisateurService.getUtilisateurById(utilisateurId);
         if (user == null ) {
             return "redirect:/?error=user_not_found";
@@ -152,5 +155,26 @@ public class PretController {
         return "redirect:/?error=penalite_add";
 
     }
+
+    @GetMapping("/mine")
+    public String listPretMine(
+        Model model,
+        HttpSession session
+    ) {
+        Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
+        if (utilisateur == null) {
+            return "redirect:/sign/in?error=connection_need";
+        } 
+        UtilisateurType utilisateurType = (UtilisateurType) session.getAttribute("utilisateurType");
+        if (utilisateurType == null) {
+            return "redirect:/sign/in?error=connection_need";
+        } 
+
+        model.addAttribute("enCours", pretService.listPretEnCours(utilisateur));
+        model.addAttribute("prolonge", pretService.listPretProlonger(utilisateur));
+
+        return "listePretMine";
+    }
+
 
 }
