@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +21,10 @@ public class Pret {
     private Integer id;
 
     @Column(name = "date_in", updatable = false)
-    private LocalDateTime dateEmprunt;
+    private LocalDateTime dateIn;
 
     @Column(name = "date_retour_prevue")
-    private LocalDateTime dateRetourPrevue;
+    private LocalDate dateRetourPrevue;
 
     @ManyToOne
     @JoinColumn(name = "id_utilisateur", nullable = false)
@@ -33,8 +34,9 @@ public class Pret {
     @JoinColumn(name = "id_exemplaire", nullable = false)
     private Exemplaire exemplaire;
 
-    @OneToMany(mappedBy = "pret", cascade = CascadeType.ALL)
-    private List<PretStatus> statuts = new ArrayList<>();
+    @Column(name = "statut" , nullable =  false , length = 50)
+    private String statut; // "EN_COURS", "PROLONGE", "TERMINE"
+
 
     // Méthode utilitaire pour ajouter un statut
    

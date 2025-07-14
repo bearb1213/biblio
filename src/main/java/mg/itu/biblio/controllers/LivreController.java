@@ -45,11 +45,30 @@ public class LivreController {
                 case "reservation_error":
                     model.addAttribute("error", "Une erreur s'est produit lors de la reservation.");
                     break;
+                case "pret_error":
+                    model.addAttribute("error", "Une erreur s'est produit lors de la pret.");
+                    break;
                 case "adhesion_error":
                     model.addAttribute("error", "Votre adhesion est tombe a echeance.");
                     break;
                 case "reservation_nb":
                     model.addAttribute("error", "Vous avez atteint votre quotas.");
+                    break;
+                case "user_not_found":
+                    model.addAttribute("error", "Utilisateur inexistant.");
+                    break;
+                case "pret_nb":
+                    model.addAttribute("error", "Vous avez atteint votre quotas.");
+                    break;
+                case "penalite":
+                    model.addAttribute("error", "Vous etes encore penaliser.");
+                    break;
+                case "pret_not_found":
+                    model.addAttribute("error", "Ce pret n'existe pas.");
+                    break;
+                
+                case "penalite_add":
+                    model.addAttribute("error", "Rendu de livre avec penalite.");
                     break;
                 default:
                     model.addAttribute("error", "Erreur inconnue.");
@@ -68,7 +87,8 @@ public class LivreController {
     public String detailLivre(
     Model model, 
     @PathVariable("id") Integer id , 
-    @RequestParam( value = "success" , required = false) String success
+    @RequestParam( value = "success" , required = false) String success,
+    @RequestParam( value = "error" , required = false) String error
     ) {
         Livre livre = livreService.getLivreById(id);
         if (livre != null) {
@@ -81,11 +101,32 @@ public class LivreController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            if (error!=null) {
+                switch (error) {
+                    case "exemplaire_used":
+                        model.addAttribute("error","Exemplaire en pret.");
+                        break;
+                    default:
+                        model.addAttribute("error","Error s'est produit .");
+                        break;
+                }
+            } else {
+                model.addAttribute("error", null);
+            }
+
             if (success!=null) {
                 switch (success) {
                     case "reservation_created":
                         model.addAttribute("success", "Reservation reussi avec success. ");
                         break;
+                    case "pret_created":
+                        model.addAttribute("success", "Pret reussi avec success. ");
+                        break;
+                    
+                    case "rendu_pret":
+                        model.addAttribute("success", "Pret Rendu avec success. ");
+                        break;
+                        
                     default:
                         model.addAttribute("success", null);
                         break;
