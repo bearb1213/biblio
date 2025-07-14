@@ -77,6 +77,20 @@ CREATE TABLE quotas(
    FOREIGN KEY(id_type) REFERENCES adhesion_type(id)
 );
 
+INSERT INTO quotas (action,nb,id_type) VALUES
+('reservation', 1, 1),
+('reservation', 2, 2),
+('reservation', 2, 3),
+('pret', 1, 1),
+('pret', 2, 2),
+('pret', 2, 3),
+('prolongement', 1, 1),
+('prolongement', 2, 2),
+('prolongement', 2, 3);
+
+
+
+
 CREATE TABLE penalite_type(
    id SERIAL,
    nb_jour INTEGER,
@@ -114,6 +128,7 @@ CREATE TABLE adhesion(
 CREATE TABLE reservation(
    id SERIAL,
    date_in TIMESTAMP,
+   date_reservation DATE,
    motif TEXT,
    id_utilisateur INTEGER NOT NULL,
    id_exemplaire INTEGER NOT NULL,

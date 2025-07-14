@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Réservations en attente</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .table-hover tbody tr:hover { background-color: rgba(0,0,0,0.05); }
+        .action-buttons { white-space: nowrap; }
+        .status-pending { background-color: #fff3cd; }
+    </style>
+</head>
+<body>
+<div class="container-fluid py-4">
+    <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i> <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
+    <!-- Message de succès (après déconnexion par exemple) -->
+    <div th:if="${success != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="card shadow">
+        <div class="card-header bg-warning text-dark">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0"><i class="bi bi-hourglass-split"></i> Réservations en attente</h3>
+                <span class="badge bg-light text-dark" th:text="${#lists.size(reservation)} + ' en attente'"></span>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <!-- Tableau des réservations en attente -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Utilisateur</th>
+                            <th>Exemplaire</th>
+                            <th>Date Demande</th>
+                            <th>Motif</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="res : ${reservation}" class="status-pending">
+                            <td th:text="${res.id}"></td>
+                            <td>
+                                <div th:text="${res.utilisateur.nom + ' ' + res.utilisateur.prenom}"></div>
+                                <small class="text-muted" th:text="${res.utilisateur.email}"></small>
+                            </td>
+                            <td th:text="${res.exemplaire.id}"></td>
+                            <td>
+                                <span th:text="${#temporals.format(res.dateReservation, 'dd/MM/yyyy')}"></span>
+                                <small class="d-block text-muted" th:text="${#temporals.format(res.dateIn, 'dd/MM/yyyy HH:mm')}"></small>
+                            </td>
+                            <td>
+                                <small th:text="${res.motif}" class="text-truncate d-inline-block" style="max-width: 200px;"></small>
+                            </td>
+                            <td class="action-buttons">
+                                <form th:action="@{/reservation/{id}/confirm(id=${res.id})}" method="post" class="d-inline me-1">
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="bi bi-check-circle"></i> Accepter
+                                    </button>
+                                </form>
+                                <form th:action="@{/reservation/{id}/reject(id=${res.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-x-circle"></i> Refuser
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(reservation)}">
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-check-circle-fill"></i> Aucune réservation en attente
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

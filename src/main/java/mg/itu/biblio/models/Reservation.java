@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "reservation")
@@ -19,9 +20,11 @@ public class Reservation {
     @Column(name = "id")
     private Integer id;
 
-    @CreationTimestamp
     @Column(name = "date_in", nullable = false, updatable = false)
-    private LocalDateTime dateReservation;
+    private LocalDateTime dateIn;
+
+    @Column(name = "date_reservation", nullable = false, updatable = false)
+    private LocalDate dateReservation;
 
     @Column(name = "motif", columnDefinition = "TEXT")
     private String motif;
@@ -33,4 +36,7 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_exemplaire", nullable = false)
     private Exemplaire exemplaire;
+
+    @Column(name = "statut", length = 50, nullable = false)
+    private String statut; // "EN_ATTENTE", "CONFIRMEE", "ANNULEE", etc.
 }
