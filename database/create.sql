@@ -98,6 +98,9 @@ CREATE TABLE penalite_type(
    PRIMARY KEY(id),
    FOREIGN KEY(id_type) REFERENCES adhesion_type(id)
 );
+INSERT INTO penalite_type(nb_jour,id_type) VALUES 
+(3,1) , (2,2) ,(2,3);
+
 
 CREATE TABLE utilisateur(
    id SERIAL,
@@ -183,3 +186,15 @@ CREATE TABLE penalite(
    PRIMARY KEY(id),
    FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id)
 );
+
+
+CREATE TABLE pret_nbJour (
+   id SERIAL,
+   nb_jour INTEGER ,
+   id_type INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_type) REFERENCES adhesion_type(id)
+);
+
+INSERT INTO pret_nbJour(nb_jour,id_type) VALUES 
+(2,1),(3,2),(3,3);

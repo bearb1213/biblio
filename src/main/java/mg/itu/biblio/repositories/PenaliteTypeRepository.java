@@ -14,4 +14,6 @@ public interface PenaliteTypeRepository extends JpaRepository<PenaliteType, Inte
     
     @Query("SELECT p.nbJoursPenalite FROM PenaliteType p WHERE p.typeAdhesion.id = :typeAdhesionId")
     Optional<Integer> findNbJoursPenaliteByTypeAdhesion(Integer typeAdhesionId);
+
+    
 }

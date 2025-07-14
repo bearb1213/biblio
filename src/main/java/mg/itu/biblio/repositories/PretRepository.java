@@ -14,5 +14,7 @@ import java.util.List;
 @Repository
 public interface PretRepository extends JpaRepository<Pret, Integer> {
 
-    
+    Integer countByUtilisateurAndStatut(Utilisateur utilisateur, String statut);
+ 
+    List<Pret> findByStatut(String statut);
 }

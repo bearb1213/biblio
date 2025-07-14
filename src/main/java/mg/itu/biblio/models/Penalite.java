@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "penalite")
@@ -19,12 +20,14 @@ public class Penalite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @CreationTimestamp
     @Column(name = "date_in", updatable = false)
-    private LocalDateTime dateDebut;
+    private LocalDateTime dateIn;
+
+    @Column(name = "date_debut", nullable = false)
+    private LocalDate dateDebut;
 
     @Column(name = "date_fin", nullable = false)
-    private LocalDateTime dateFin;
+    private LocalDate dateFin;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_utilisateur", nullable = false)

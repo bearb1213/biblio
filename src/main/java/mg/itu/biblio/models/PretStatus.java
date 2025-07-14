@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Entity
@@ -22,10 +23,13 @@ public class PretStatus {
     private String statu; // "EN_COURS", "PROLONGE", "TERMINE"
 
     @Column(name = "date_in", updatable = false)
-    private LocalDateTime dateDebut;
+    private LocalDateTime dateIn;
+
+    @Column(name = "date_debut")
+    private LocalDate dateDebut;
 
     @Column(name = "date_fin")
-    private LocalDateTime dateFin;
+    private LocalDate dateFin;
 
     @ManyToOne
     @JoinColumn(name = "id_pret", nullable = false)
