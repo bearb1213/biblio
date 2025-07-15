@@ -1,5 +1,6 @@
 package mg.itu.biblio.services;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ import mg.itu.biblio.models.PretNbJour;
 import mg.itu.biblio.models.PretStatus;
 import mg.itu.biblio.models.Prolongement;
 import mg.itu.biblio.models.Utilisateur;
+import mg.itu.biblio.repositories.JfRepository;
 import mg.itu.biblio.repositories.PretNbJourRepository;
 import mg.itu.biblio.repositories.PretRepository;
 import mg.itu.biblio.repositories.PretStatusRepository;
@@ -35,6 +37,12 @@ public class ProlongementService {
 
     @Autowired
     PretStatusRepository pretStatusRepository;
+
+    
+    @Autowired 
+    private JfRepository jfRepository;
+
+
 
 
     public Prolongement findById(Integer id){
@@ -87,7 +95,9 @@ public class ProlongementService {
 
         Pret pret = prolongement.getPret();
         LocalDate debut = pret.getDateRetourPrevue().minusDays(pretNbJour.getNbJour());
-        pret.setDateRetourPrevue(pret.getDateRetourPrevue().plusDays(pretNbJour.getNbJour()));
+        LocalDate dateFin = pret.getDateRetourPrevue().plusDays(pretNbJour.getNbJour());
+        dateFin=ajusteDay(dateFin);
+        pret.setDateRetourPrevue(dateFin);
         pret.setStatut("PROLONGE");
         
         PretStatus pretStatus = new PretStatus();
@@ -104,6 +114,24 @@ public class ProlongementService {
         
         return prolongementRepository.save(p);
     }
+
+    
+    public boolean isDayOff(LocalDate date){
+        int nbJM = jfRepository.findByJourAndMois(date.getDayOfMonth(), date.getMonthValue()).size();
+        int nbD = jfRepository.findByDateFix(date).size();
+        DayOfWeek dow = date.getDayOfWeek();
+        return (dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY || nbJM>0 || nbD>0);
+         
+    }
+
+
+    public LocalDate ajusteDay(LocalDate date){
+        while (isDayOff(date)) {
+            date=date.plusDays(1);
+        }
+        return date;
+    }
+   
 
 
 
