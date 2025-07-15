@@ -37,6 +37,8 @@ public class Pret {
     @Column(name = "statut" , nullable =  false , length = 50)
     private String statut; // "EN_COURS", "PROLONGE", "TERMINE"
 
+    @Column(name = "type" , length = 50 , nullable = false)
+    private String type;
 
     // Méthode utilitaire pour ajouter un statut
    

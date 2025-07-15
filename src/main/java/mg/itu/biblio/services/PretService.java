@@ -64,7 +64,7 @@ public class PretService {
         return pretRepository.countByUtilisateurAndStatut(utilisateur, "PROLONGE");
     }
 
-    public Pret createPret(Utilisateur utilisateur ,Exemplaire exemplaire , LocalDate datePret , AdhesionType adhesionType ) throws Exception{
+    public Pret createPret(Utilisateur utilisateur ,Exemplaire exemplaire , LocalDate datePret , AdhesionType adhesionType,boolean surPlace ) throws Exception{
         LocalDateTime now = LocalDateTime.now();
         Pret pret= new Pret();
         PretNbJour pretNbJour = pretNbJourRepository.findByAdhesionTypeId(adhesionType.getId()).orElse(null);
@@ -73,16 +73,28 @@ public class PretService {
         }
         LocalDate dateFin = datePret.plusDays(pretNbJour.getNbJour());
         pret.setDateIn(now);
-        pret.setDateRetourPrevue(dateFin);
         pret.setUtilisateur(utilisateur);
         pret.setExemplaire(exemplaire);
         pret.setStatut("EN_COURS");
+        
 
         PretStatus pretStatus = new PretStatus();
         pretStatus.setStatu("EN_COURS");
         pretStatus.setDateIn(now);
-        pretStatus.setDateDebut(datePret);
-        pretStatus.setDateFin(dateFin);
+        if (surPlace) {
+            pretStatus.setDateDebut(datePret);
+            pretStatus.setDateFin(datePret);
+            pret.setType("SUR_PLACE");
+            pret.setDateRetourPrevue(datePret);
+
+        } else {
+            pretStatus.setDateDebut(datePret);
+            pretStatus.setDateFin(dateFin);
+            pret.setType("MAISON");
+            pret.setDateRetourPrevue(dateFin);
+
+        }
+
         pretStatus.setPret(pret);
 
         pretRepository.save(pret);

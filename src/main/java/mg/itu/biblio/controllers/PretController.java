@@ -40,6 +40,7 @@ public class PretController {
     @PostMapping("/new")
     public String preter(
         @RequestParam("livreId") Integer livreId,
+        @RequestParam("type") Integer type,
         @RequestParam("utilisateurId") Integer utilisateurId,
         @RequestParam("exemplaireId") Integer exemplaireId,
         @RequestParam("datePret") String datePret,
@@ -88,16 +89,12 @@ public class PretController {
             return "redirect:/?error=penalite";
         }
 
-
-
-
-        
         
         if(pretService.getNbPret(user) >= pretService.getPretQuota(adhesion.getTypeAdhesion().getId())){
             return "redirect:/?error=pret_nb";
         }
         try {
-            pretService.createPret(user, exemplaire, datePretParsed, adhesion.getTypeAdhesion());
+            pretService.createPret(user, exemplaire, datePretParsed, adhesion.getTypeAdhesion(),type.equals(1));
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/?error=pret_error";
@@ -105,6 +102,9 @@ public class PretController {
 
         return "redirect:/livres/"+livreId+"?success=pret_created";
     }
+        
+
+
 
     @GetMapping
     public String listePret(

@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
+import mg.itu.biblio.models.Adhesion;
 import mg.itu.biblio.models.Pret;
+import mg.itu.biblio.models.Prolongement;
 import mg.itu.biblio.models.Utilisateur;
 import mg.itu.biblio.models.UtilisateurType;
 import mg.itu.biblio.services.PretService;
 import mg.itu.biblio.services.ProlongementService;
+import mg.itu.biblio.services.UtilisateurService;
 
 @Controller
 @RequestMapping("/prolongement")
@@ -25,6 +28,8 @@ public class ProlongementController {
     @Autowired 
     private PretService pretService;
 
+    @Autowired
+    private UtilisateurService utilisateurService;
 
     @PostMapping("/demande/{id}")
     public String demande(
@@ -67,9 +72,10 @@ public class ProlongementController {
         return "listeDemande";
 
     }
-    @PostMapping
+    @GetMapping("/refuser/{id}")
     public String refuser(
-        HttpSession session
+        HttpSession session,
+        @PathVariable("id") Integer id
     ){
         Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
         if (utilisateur == null) {
@@ -81,6 +87,37 @@ public class ProlongementController {
         } else if( utilisateurType.getId() != 1) {
             return "redirect:/sign/in?error=access_denied";
         } 
+        Prolongement prolongement = prolongementService.findById(id);
+        prolongementService.refuser(prolongement);
+        
+        return "redirect:/?error=prolongement_refused";
+    }
+
+    @GetMapping("/accepter/{id}")
+    public String accepter(
+        HttpSession session,
+        @PathVariable("id") Integer id
+    ){
+        Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
+        if (utilisateur == null) {
+            return "redirect:/sign/in?error=connection_need";
+        } 
+        UtilisateurType utilisateurType = (UtilisateurType) session.getAttribute("utilisateurType");
+        if (utilisateurType == null) {
+            return "redirect:/sign/in?error=connection_need";
+        } else if( utilisateurType.getId() != 1) {
+            return "redirect:/sign/in?error=access_denied";
+        } 
+        
+        Prolongement prolongement = prolongementService.findById(id);
+        Pret p = prolongement.getPret();
+        Utilisateur user = p.getUtilisateur();
+        Adhesion adhesion = utilisateurService.isAdherant(user);
+        if (adhesion==null) {
+            return "redirect:/?error=adhesion_error";
+        }
+        
+        prolongementService.accepter(prolongement,adhesion);
         
         return "redirect:/";
     }

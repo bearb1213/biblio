@@ -70,9 +70,14 @@ public class LivreController {
                 case "penalite_add":
                     model.addAttribute("error", "Rendu de livre avec penalite.");
                     break;
+                
+                case "prolongement_refused":
+                    model.addAttribute("error", "Prolongement refuse.");
+                    break;
                 default:
                     model.addAttribute("error", "Erreur inconnue.");
                     break;
+                    
                     
                 }
         } else {

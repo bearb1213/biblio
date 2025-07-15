@@ -198,3 +198,4 @@ CREATE TABLE pret_nbJour (
 
 INSERT INTO pret_nbJour(nb_jour,id_type) VALUES 
 (2,1),(3,2),(3,3);
+
