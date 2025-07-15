@@ -17,4 +17,7 @@ public interface PretRepository extends JpaRepository<Pret, Integer> {
     Integer countByUtilisateurAndStatut(Utilisateur utilisateur, String statut);
  
     List<Pret> findByStatut(String statut);
+
+    List<Pret> findByStatutAndUtilisateur(String statut , Utilisateur utilisateur);
+
 }

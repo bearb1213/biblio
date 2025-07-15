@@ -70,9 +70,14 @@ public class LivreController {
                 case "penalite_add":
                     model.addAttribute("error", "Rendu de livre avec penalite.");
                     break;
+                
+                case "prolongement_refused":
+                    model.addAttribute("error", "Prolongement refuse.");
+                    break;
                 default:
                     model.addAttribute("error", "Erreur inconnue.");
                     break;
+                    
                     
                 }
         } else {
@@ -109,6 +114,7 @@ public class LivreController {
                     default:
                         model.addAttribute("error","Error s'est produit .");
                         break;
+
                 }
             } else {
                 model.addAttribute("error", null);
@@ -126,6 +132,10 @@ public class LivreController {
                     case "rendu_pret":
                         model.addAttribute("success", "Pret Rendu avec success. ");
                         break;
+                    case "prolongement":
+                        model.addAttribute("success", "Demande de prolongement reussi. ");
+                        break;
+                    
                         
                     default:
                         model.addAttribute("success", null);

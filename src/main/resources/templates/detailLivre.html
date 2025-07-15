@@ -108,6 +108,14 @@
                         
                         <div class="mb-3">
                             <label for="utilisateurId" class="form-label">Utilisateur</label>
+                            <select class="form-select" id="type" name="type" required>
+                                <option value="1">Sur place</option>
+                                <option value="2">Maison</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="utilisateurId" class="form-label">Utilisateur</label>
                             <select class="form-select" id="utilisateurId" name="utilisateurId" required>
                                 <option value="">Sélectionner un utilisateur</option>
                                 <option th:each="utilisateur : ${utilisateurs}" 

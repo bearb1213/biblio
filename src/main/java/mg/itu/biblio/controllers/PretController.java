@@ -40,12 +40,13 @@ public class PretController {
     @PostMapping("/new")
     public String preter(
         @RequestParam("livreId") Integer livreId,
+        @RequestParam("type") Integer type,
         @RequestParam("utilisateurId") Integer utilisateurId,
         @RequestParam("exemplaireId") Integer exemplaireId,
         @RequestParam("datePret") String datePret,
         HttpSession session
     ) {
-        
+        /// test user
         Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
         if (utilisateur == null) {
             return "redirect:/sign/in?error=connection_need";
@@ -56,6 +57,8 @@ public class PretController {
         } else if( utilisateurType.getId() != 1) {
             return "redirect:/sign/in?error=access_denied";
         } 
+
+        /// test livre
         Livre livre = livreService.getLivreById(livreId);
         if(livre == null){
             return "redirect:/?error=livre_not_found";
@@ -64,6 +67,7 @@ public class PretController {
         if(exemplaire == null){
             return "redirect:/?error=exemplaire_not_found";
         }
+
         Utilisateur user = utilisateurService.getUtilisateurById(utilisateurId);
         if (user == null ) {
             return "redirect:/?error=user_not_found";
@@ -85,16 +89,12 @@ public class PretController {
             return "redirect:/?error=penalite";
         }
 
-
-
-
-        
         
         if(pretService.getNbPret(user) >= pretService.getPretQuota(adhesion.getTypeAdhesion().getId())){
             return "redirect:/?error=pret_nb";
         }
         try {
-            pretService.createPret(user, exemplaire, datePretParsed, adhesion.getTypeAdhesion());
+            pretService.createPret(user, exemplaire, datePretParsed, adhesion.getTypeAdhesion(),type.equals(1));
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/?error=pret_error";
@@ -102,6 +102,9 @@ public class PretController {
 
         return "redirect:/livres/"+livreId+"?success=pret_created";
     }
+        
+
+
 
     @GetMapping
     public String listePret(
@@ -152,5 +155,26 @@ public class PretController {
         return "redirect:/?error=penalite_add";
 
     }
+
+    @GetMapping("/mine")
+    public String listPretMine(
+        Model model,
+        HttpSession session
+    ) {
+        Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
+        if (utilisateur == null) {
+            return "redirect:/sign/in?error=connection_need";
+        } 
+        UtilisateurType utilisateurType = (UtilisateurType) session.getAttribute("utilisateurType");
+        if (utilisateurType == null) {
+            return "redirect:/sign/in?error=connection_need";
+        } 
+
+        model.addAttribute("enCours", pretService.listPretEnCours(utilisateur));
+        model.addAttribute("prolonge", pretService.listPretProlonger(utilisateur));
+
+        return "listePretMine";
+    }
+
 
 }
