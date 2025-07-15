@@ -88,6 +88,9 @@ public class PretController {
         if (pretService.isPenaliser(user, datePretParsed)) {
             return "redirect:/?error=penalite";
         }
+        if (user.age() <  livre.getRestriction()) {
+            return "redirect:/?error=age_restriction";
+        }
 
         
         if(pretService.getNbPret(user) >= pretService.getPretQuota(adhesion.getTypeAdhesion().getId())){
