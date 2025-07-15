@@ -54,7 +54,8 @@
             
             <!-- Colonne de droite - Détails du livre -->
             <div class="col-md-8">
-                <h1 th:text="${livre.titre}">Titre du livre</h1>
+                <h1 th:text="${livre.titre}">Titre du livre </h1> 
+                <a th:href="@{/}" class="btn btn-outline-primary">retour</a>
                 <h4 class="text-muted" th:text="${livre.auteur.nom}">Auteur</h4>
                 
                 <hr>

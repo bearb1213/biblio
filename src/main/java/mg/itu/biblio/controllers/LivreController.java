@@ -74,6 +74,11 @@ public class LivreController {
                 case "prolongement_refused":
                     model.addAttribute("error", "Prolongement refuse.");
                     break;
+                case "age_restriction":
+                    model.addAttribute("error", "Vous n'avez pas l'age requis.");
+                    break;
+                    
+                    
                 default:
                     model.addAttribute("error", "Erreur inconnue.");
                     break;

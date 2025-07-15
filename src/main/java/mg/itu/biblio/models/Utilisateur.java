@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @Table(name = "utilisateur")
@@ -39,4 +40,11 @@ public class Utilisateur {
     @ManyToOne
     @JoinColumn(name = "id_type", referencedColumnName = "id", nullable = false)
     private UtilisateurType typeUtilisateur;
+
+    public int age(){
+        LocalDate now =LocalDate.now();
+        Period age = Period.between(dateNaissance,now);
+        return age.getYears();
+    }
+
 }
