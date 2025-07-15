@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.qos.logback.classic.pattern.Util;
 import mg.itu.biblio.models.Utilisateur;
 import mg.itu.biblio.models.Adhesion;
 import mg.itu.biblio.models.AdhesionType;
@@ -123,6 +124,9 @@ public class PretService {
 
         System.out.println("\n\n\n\n\n\n\n\n\nPENALITE : "+penalites.size()+"\n\n\n\n\n\n\n\n\n\n\n");
         return penalites.size()>0;
+    }
+    public List<Penalite> listPenalites(Utilisateur utilisateur,LocalDate date){
+        return penaliteRepository.findPenalitesByUtilisateurAndDateRange(utilisateur,date);
     }
     public List<Pret> listPretEnCours(){
         return pretRepository.findByStatut("EN_COURS");

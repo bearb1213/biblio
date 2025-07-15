@@ -2,29 +2,17 @@
 DROP DATABASE IF EXISTS biblio ;
 CREATE DATABASE biblio;
 \c biblio
-
 CREATE TABLE adhesion_type(
    id SERIAL,
    type VARCHAR(50),
    PRIMARY KEY(id)
 );
 
-INSERT INTO adhesion_type (type) VALUES 
-('Etudiant'),
-('Professeur'),
-('Professionnel');
-
-
 CREATE TABLE utilisateur_type(
    id SERIAL,
    type VARCHAR(50),
    PRIMARY KEY(id)
 );
-
-INSERT INTO utilisateur_type (type) VALUES 
-('Bibliothecaire'),
-('User');
-
 
 CREATE TABLE auteur(
    id SERIAL,
@@ -77,20 +65,6 @@ CREATE TABLE quotas(
    FOREIGN KEY(id_type) REFERENCES adhesion_type(id)
 );
 
-INSERT INTO quotas (action,nb,id_type) VALUES
-('reservation', 1, 1),
-('reservation', 2, 2),
-('reservation', 2, 3),
-('pret', 1, 1),
-('pret', 2, 2),
-('pret', 2, 3),
-('prolongement', 1, 1),
-('prolongement', 2, 2),
-('prolongement', 2, 3);
-
-
-
-
 CREATE TABLE penalite_type(
    id SERIAL,
    nb_jour INTEGER,
@@ -98,9 +72,22 @@ CREATE TABLE penalite_type(
    PRIMARY KEY(id),
    FOREIGN KEY(id_type) REFERENCES adhesion_type(id)
 );
-INSERT INTO penalite_type(nb_jour,id_type) VALUES 
-(3,1) , (2,2) ,(2,3);
 
+CREATE TABLE jf(
+   id SERIAL,
+   jour INTEGER NOT NULL,
+   mois INTEGER,
+   date_fix DATE,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE pret_nbjour(
+   id SERIAL,
+   nb_jour INTEGER Not NULL,
+   id_type INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_type) REFERENCES adhesion_type(id)
+);
 
 CREATE TABLE utilisateur(
    id SERIAL,
@@ -114,8 +101,6 @@ CREATE TABLE utilisateur(
    PRIMARY KEY(id),
    FOREIGN KEY(id_type) REFERENCES utilisateur_type(id)
 );
-INSERT INTO utilisateur (nom,prenom,email,mdp,date_naissance,date_in,id_type) VALUES
-('biblio' , 'biblio' , 'biblio@gmail.com' , 'biblio' , '2000-01-01' , now() , 1 );
 
 CREATE TABLE adhesion(
    id SERIAL,
@@ -131,8 +116,9 @@ CREATE TABLE adhesion(
 CREATE TABLE reservation(
    id SERIAL,
    date_in TIMESTAMP,
-   date_reservation DATE,
    motif TEXT,
+   date_reservation DATE,
+   statut VARCHAR(50),
    id_utilisateur INTEGER NOT NULL,
    id_exemplaire INTEGER NOT NULL,
    PRIMARY KEY(id),
@@ -152,6 +138,9 @@ CREATE TABLE reservation_status(
 CREATE TABLE pret(
    id SERIAL,
    date_in TIMESTAMP,
+   date_retour_prevue DATE,
+   statut VARCHAR(50),
+   type VARCHAR(50),
    id_utilisateur INTEGER NOT NULL,
    id_exemplaire INTEGER NOT NULL,
    PRIMARY KEY(id),
@@ -163,7 +152,8 @@ CREATE TABLE pret_status(
    id SERIAL,
    statu VARCHAR(50),
    date_in TIMESTAMP,
-   date_fin TIMESTAMP,
+   date_debut DATE,
+   date_fin DATE,
    id_pret INTEGER NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_pret) REFERENCES pret(id)
@@ -181,29 +171,43 @@ CREATE TABLE prolongement(
 CREATE TABLE penalite(
    id SERIAL,
    date_in TIMESTAMP,
-   date_fin TIMESTAMP,
+   date_fin DATE,
+   date_debut DATE NOT NULL,
+   motif TEXT,
    id_utilisateur INTEGER NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id)
 );
 
+INSERT INTO adhesion_type (type) VALUES 
+('Etudiant'),
+('Professeur'),
+('Professionnel');
 
-CREATE TABLE pret_nbJour (
-   id SERIAL,
-   nb_jour INTEGER ,
-   id_type INTEGER NOT NULL,
-   PRIMARY KEY(id),
-   FOREIGN KEY(id_type) REFERENCES adhesion_type(id)
-);
+INSERT INTO utilisateur_type (type) VALUES 
+('Bibliothecaire'),
+('User');
 
-INSERT INTO pret_nbJour(nb_jour,id_type) VALUES 
-(2,1),(3,2),(3,3);
-
-CREATE TABLE jf (
-   id SERIAL,
-   jour INTEGER,
-   mois INTEGER,
-   date_fix DATE
-);
+INSERT INTO utilisateur (nom,prenom,email,mdp,date_naissance,date_in,id_type) VALUES
+('biblio' , 'biblio' , 'biblio@gmail.com' , 'biblio' , '2000-01-01' , now() , 1 );
 
 
+INSERT INTO quotas (action,nb,id_type) VALUES
+('reservation', 1, 1),
+('reservation', 2, 2),
+('reservation', 2, 3),
+('pret', 1, 1),
+('pret', 2, 2),
+('pret', 2, 3),
+('prolongement', 1, 1),
+('prolongement', 2, 2),
+('prolongement', 2, 3);
+
+INSERT INTO pret_nbjour (nb_jour,id_type) VALUES 
+(2,1) , (3,2) ,(3,3);
+
+INSERT INTO penalite_type (nb_jour,id_type) VALUES
+(7,1) , (5,2) ,(5,2);
+
+
+INSERT INTO jf(jour,mois) VALUES (25,12) , (1,1) , (31,12);

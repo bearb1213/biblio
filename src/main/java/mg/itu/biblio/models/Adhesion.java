@@ -28,7 +28,7 @@ public class Adhesion {
     @JoinColumn(name = "id_utilisateur", nullable = false)
     private Utilisateur utilisateur;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_type", nullable = false)
     private AdhesionType typeAdhesion;
 }
