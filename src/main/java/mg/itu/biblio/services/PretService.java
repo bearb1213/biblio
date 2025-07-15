@@ -1,5 +1,6 @@
 package mg.itu.biblio.services;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,10 +12,12 @@ import mg.itu.biblio.models.Utilisateur;
 import mg.itu.biblio.models.Adhesion;
 import mg.itu.biblio.models.AdhesionType;
 import mg.itu.biblio.models.Exemplaire;
+import mg.itu.biblio.models.Jf;
 import mg.itu.biblio.models.Penalite;
 import mg.itu.biblio.models.Pret;
 import mg.itu.biblio.models.PretNbJour;
 import mg.itu.biblio.models.PretStatus;
+import mg.itu.biblio.repositories.JfRepository;
 import mg.itu.biblio.repositories.PenaliteRepository;
 import mg.itu.biblio.repositories.PenaliteTypeRepository;
 import mg.itu.biblio.repositories.PretNbJourRepository;
@@ -46,6 +49,10 @@ public class PretService {
     @Autowired
     private UtilisateurService utilisateurService;
 
+    @Autowired 
+    private JfRepository jfRepository;
+
+
     public Pret findById(Integer id){
         return pretRepository.findById(id).orElse(null);
     }
@@ -71,11 +78,12 @@ public class PretService {
         if (pretNbJour == null) {
             throw new Exception("Pret Nb jour pas encore configurer");
         }
-        LocalDate dateFin = datePret.plusDays(pretNbJour.getNbJour());
+        
         pret.setDateIn(now);
         pret.setUtilisateur(utilisateur);
         pret.setExemplaire(exemplaire);
         pret.setStatut("EN_COURS");
+        
         
 
         PretStatus pretStatus = new PretStatus();
@@ -88,6 +96,9 @@ public class PretService {
             pret.setDateRetourPrevue(datePret);
 
         } else {
+            LocalDate dateFin = datePret.plusDays(pretNbJour.getNbJour());
+            dateFin=ajusteDay(dateFin);
+
             pretStatus.setDateDebut(datePret);
             pretStatus.setDateFin(dateFin);
             pret.setType("MAISON");
@@ -142,6 +153,7 @@ public class PretService {
                 nbJour = 2;
             }
 
+
             Penalite penalite = new Penalite();
             penalite.setDateIn(now);
             penalite.setDateDebut(date);
@@ -163,7 +175,22 @@ public class PretService {
     }
     public List<Pret> listPretProlonger(Utilisateur utilisateur){
         return pretRepository.findByStatutAndUtilisateur("PROLONGE", utilisateur);
-   }
+    }
+    public boolean isDayOff(LocalDate date){
+        int nbJM = jfRepository.findByJourAndMois(date.getDayOfMonth(), date.getMonthValue()).size();
+        int nbD = jfRepository.findByDateFix(date).size();
+        DayOfWeek dow = date.getDayOfWeek();
+        return (dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY || nbJM>0 || nbD>0);
+         
+    }
+
+
+    public LocalDate ajusteDay(LocalDate date){
+        while (isDayOff(date)) {
+            date=date.plusDays(1);
+        }
+        return date;
+    }
    
 
 
