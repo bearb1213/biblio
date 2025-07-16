@@ -112,7 +112,7 @@ public class ProlongementController {
         Prolongement prolongement = prolongementService.findById(id);
         Pret p = prolongement.getPret();
         Utilisateur user = p.getUtilisateur();
-        Adhesion adhesion = utilisateurService.isAdherant(user);
+        Adhesion adhesion = utilisateurService.isAdherant(user,p.getDateRetourPrevue());
         if (adhesion==null) {
             return "redirect:/?error=adhesion_error";
         }

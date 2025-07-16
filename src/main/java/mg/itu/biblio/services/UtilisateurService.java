@@ -93,6 +93,23 @@ public class UtilisateurService {
         if (adhesion.getDateFin().isBefore(LocalDate.now())) {
             return null;
         } 
+        if (adhesion.getDateIn().isAfter(LocalDate.now())) {
+            return null;
+        }
+        return adhesion;
+        
+    }
+    public Adhesion isAdherant(Utilisateur utilisateur,LocalDate date){
+        Adhesion adhesion = getLastAdhesionByUtilisateur(utilisateur);
+        if (adhesion==null) {
+            return null;
+        } 
+        if (adhesion.getDateFin().isBefore(date)) {
+            return null;
+        }
+        if (adhesion.getDateIn().isAfter(date)) {
+            return null;
+        } 
         return adhesion;
         
     }

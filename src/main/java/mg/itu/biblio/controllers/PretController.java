@@ -72,16 +72,18 @@ public class PretController {
         if (user == null ) {
             return "redirect:/?error=user_not_found";
         }
-        Adhesion adhesion = utilisateurService.isAdherant(user);
-        if (adhesion==null) {
-            return "redirect:/?error=adhesion_error";
-        }
         LocalDate datePretParsed ;
         if (datePret == null || datePret.isEmpty()) {
             datePretParsed = LocalDate.now();
         } else {
             datePretParsed = LocalDate.parse(datePret);
         }
+        
+        Adhesion adhesion = utilisateurService.isAdherant(user,datePretParsed);
+        if (adhesion==null) {
+            return "redirect:/?error=adhesion_error";
+        }
+
         if (pretService.isEnPret(exemplaire, datePretParsed)) {
             return "redirect:/livres/"+livreId+"?error=exemplaire_used";
         }
