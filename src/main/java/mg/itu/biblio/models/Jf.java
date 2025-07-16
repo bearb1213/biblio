@@ -19,13 +19,13 @@ public class Jf {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "jour")
+    @Column(name = "jour" , nullable = true)
     private Integer jour;
 
-    @Column(name = "mois")
+    @Column(name = "mois" , nullable = true)
     private Integer mois;
 
-    @Column(name = "date_fix")
+    @Column(name = "date_fix" , nullable = true)
     private LocalDate dateFix;
 
 }

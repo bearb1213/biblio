@@ -75,7 +75,7 @@ CREATE TABLE penalite_type(
 
 CREATE TABLE jf(
    id SERIAL,
-   jour INTEGER NOT NULL,
+   jour INTEGER ,
    mois INTEGER,
    date_fix DATE,
    PRIMARY KEY(id)
@@ -195,19 +195,35 @@ INSERT INTO utilisateur (nom,prenom,email,mdp,date_naissance,date_in,id_type) VA
 INSERT INTO quotas (action,nb,id_type) VALUES
 ('reservation', 1, 1),
 ('reservation', 2, 2),
-('reservation', 2, 3),
-('pret', 1, 1),
-('pret', 2, 2),
-('pret', 2, 3),
-('prolongement', 1, 1),
-('prolongement', 2, 2),
-('prolongement', 2, 3);
+('reservation', 3, 3),
+('pret', 2, 1),
+('pret', 3, 2),
+('pret', 4, 3),
+('prolongement', 3, 1),
+('prolongement', 5, 2),
+('prolongement', 7, 3);
 
 INSERT INTO pret_nbjour (nb_jour,id_type) VALUES 
-(2,1) , (3,2) ,(3,3);
+(7,1) , (9,2) ,(12,3);
 
 INSERT INTO penalite_type (nb_jour,id_type) VALUES
-(7,1) , (5,2) ,(5,2);
+(10,1) , (9,2) ,(8,3);
 
 
 INSERT INTO jf(jour,mois) VALUES (25,12) , (1,1) , (31,12);
+
+INSERT INTO jf(date_fix) VALUES 
+('2025-07-26'),
+('2025-07-19');
+
+
+
+INSERT INTO jf(date_fix) VALUES 
+('2025-07-13'),
+('2025-07-19'),
+('2025-07-20'),
+('2025-07-26'),
+('2025-07-27'),
+('2025-08-03'),
+('2025-08-10'),
+('2025-08-17');
