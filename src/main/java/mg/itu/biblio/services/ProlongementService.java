@@ -120,7 +120,7 @@ public class ProlongementService {
         int nbJM = jfRepository.findByJourAndMois(date.getDayOfMonth(), date.getMonthValue()).size();
         int nbD = jfRepository.findByDateFix(date).size();
         DayOfWeek dow = date.getDayOfWeek();
-        return (dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY || nbJM>0 || nbD>0);
+        return ( dow == DayOfWeek.SUNDAY || nbJM>0 || nbD>0);
          
     }
 
