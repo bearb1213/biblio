@@ -156,7 +156,7 @@ public class UtilisateurService {
             return ua;
         }
         ua.setUtilisateur(utilisateur);
-        Adhesion adhesion = isAdherant(utilisateur);        
+        Adhesion adhesion = isAdherant(utilisateur,now);        
         if (adhesion==null) {
             return ua;
         }

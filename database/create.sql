@@ -227,3 +227,5 @@ INSERT INTO jf(date_fix) VALUES
 ('2025-08-03'),
 ('2025-08-10'),
 ('2025-08-17');
+
+update penalite set date_debut='2025-08-08' , date_fin= '2025-08-16' where id=2;
